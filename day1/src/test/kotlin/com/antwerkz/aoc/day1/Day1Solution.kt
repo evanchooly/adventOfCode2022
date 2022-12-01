@@ -8,18 +8,13 @@ class Day1Solution {
     @Test
     fun part1() {
         assertEquals(solvePart1("input1-sample.txt"), 24000);
-        val liveData = solvePart1("input1.txt")
-
-        println("biggest load is ${liveData} calories")
+        println("biggest load is ${solvePart1("input1.txt")} calories")
     }
 
     @Test
     fun part2() {
-        solvePart2("input1-sample.txt")
         assertEquals(solvePart2("input1-sample.txt"), 45000);
-        val liveData = solvePart2("input1.txt")
-
-        println("total of the biggest 3 is ${liveData} calories")
+        println("total of the biggest 3 is ${solvePart2("input1.txt")} calories")
     }
 
     private fun solvePart1(input: String) = load(input)
