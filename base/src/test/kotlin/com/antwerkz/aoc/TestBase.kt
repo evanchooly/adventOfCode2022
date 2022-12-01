@@ -20,11 +20,26 @@ abstract class TestBase {
         println("Solution to part 2:  ${solvePart2(data)}")
     }
 
-    abstract fun samplePart1()
+    @Test
+    fun part3() {
+        try {
+            samplePart3()
+            println("Solution to part 3:  ${solvePart3(data)}")
+        } catch (_: NotImplementedError) {
+        }
+    }
 
+    abstract fun samplePart1()
     abstract fun samplePart2()
+    open fun samplePart3() {
+        TODO()
+    }
+
     abstract fun solvePart1(data: List<String>): Int
     abstract fun solvePart2(data: List<String>): Int
+    open fun solvePart3(data: List<String>): Int {
+        TODO()
+    }
 
     @DataProvider(name = "inputs")
     fun readInputs(): Array<Array<List<String>>> {
