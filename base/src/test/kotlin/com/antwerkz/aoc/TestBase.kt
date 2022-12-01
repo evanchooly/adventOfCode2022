@@ -1,39 +1,41 @@
 package com.antwerkz.aoc
 
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileReader
-import java.io.InputStreamReader
-import org.testng.Assert
-import org.testng.Assert.fail
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
-open class TestBase {
+abstract class TestBase {
+    val sample = "src/test/resources/sample.txt".gras()
+    val data = "src/test/resources/input.txt".gras()
+
     @Test
-    fun alwaysFail() {
-        fail("as expected")
+    fun part1() {
+        samplePart1();
+        println("Solution to part 1:  ${solvePart1(data)}")
     }
 
-    @Test(dataProvider = "inputs")
-    open fun part1(setName: String, data: List<String>) {
+    @Test
+    fun part2() {
+        samplePart2()
+        println("Solution to part 2:  ${solvePart2(data)}")
     }
 
-    @Test(dataProvider = "inputs")
-    open fun part2(setName: String, data: List<String>) {
-    }
+    abstract fun samplePart1()
+
+    abstract fun samplePart2()
+    abstract fun solvePart1(data: List<String>): Int
+    abstract fun solvePart2(data: List<String>): Int
 
     @DataProvider(name = "inputs")
-    fun readInputs(): List<Pair<String, List<String>>> {
-        return listOf(
-            "sample.txt" to "/sample.txt".gras(),
-            "input.txt" to "/input.txt".gras()
-        )
+    fun readInputs(): Array<Array<List<String>>> {
+        return arrayOf(arrayOf())
     }
+
     private fun String.gras(): List<String> {
         return File(this).readLines()
-//        val lines = BufferedReader(InputStreamReader(javaClass.getResourceAsStream(this)))
-//            .lines()
-//        return lines.collect(toCollection(MutableList<String>()))
+    }
+
+    @DataProvider(name = "dummy")
+    fun bob() {
     }
 }

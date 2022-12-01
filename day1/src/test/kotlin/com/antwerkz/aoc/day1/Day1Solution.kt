@@ -1,29 +1,23 @@
 package com.antwerkz.aoc.day1
 
 import com.antwerkz.aoc.TestBase
-import java.io.File
 import org.testng.Assert.assertEquals
-import org.testng.annotations.Test
 
-class Day1Solution: TestBase() {
-    @Test
-    override fun part1(setName: String, data: List<String>) {
-        assertEquals(solvePart1("sample.txt"), 24000);
-        println("[${setName}] biggest load is ${solvePart1("input.txt")} calories")
+class Day1Solution : TestBase() {
+    override fun samplePart1() {
+        assertEquals(solvePart1(sample), 24000);
     }
 
-    @Test
-    override fun part2(setName: String, data: List<String>) {
-        assertEquals(solvePart2("sample.txt"), 45000);
-        println("total of the biggest 3 is ${solvePart2("input.txt")} calories")
+    override fun samplePart2() {
+        assertEquals(solvePart2(sample), 45000);
     }
 
-    private fun solvePart1(input: List<String>) = load(input)
+    override fun solvePart1(input: List<String>) = load(input)
         .map { elf -> elf to elf.load.sum() }
         .maxBy { it.second }
         .second
 
-    private fun solvePart2(input: List<String>) = load(input)
+    override fun solvePart2(input: List<String>) = load(input)
         .map { elf -> elf to elf.load.sum() }
         .sortedByDescending { it.second }
         .take(3).sumOf { it.second }
