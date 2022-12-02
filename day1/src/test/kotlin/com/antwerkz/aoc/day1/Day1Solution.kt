@@ -4,6 +4,8 @@ import com.antwerkz.aoc.TestBase
 import org.testng.Assert.assertEquals
 
 class Day1Solution : TestBase() {
+    override fun day() = 1
+
     override fun samplePart1() {
         assertEquals(solvePart1(sample), 24000);
     }

@@ -1,18 +1,44 @@
 package com.antwerkz.aoc
 
 import java.io.File
+import java.net.URI
+import org.apache.hc.client5.http.fluent.Request
+import org.testng.annotations.BeforeClass
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 abstract class TestBase {
-    val sample = "src/test/resources/sample.txt".gras()
-    val data = "src/test/resources/input.txt".gras()
+    companion object {
+        val INPUT = "src/test/resources/input.txt"
+        val SAMPLE = "src/test/resources/sample.txt"
+    }
+
+    val sample = SAMPLE.gras()
+    lateinit var data: List<String>
+
+    @BeforeClass
+    fun downloadInput() {
+        val file = File(INPUT)
+        if (!file.exists() || file.length() == 0L) {
+            val url = URI("https://adventofcode.com/2022/day/${day()}/input")
+
+            Request.get(url)
+                .userAgent("Mozilla/5.0 (compatible; aoc; +https://github.com/evanchooly/adventofcode2022)")
+                .addHeader("Cookie", "session="+System.getenv("SESSION_ID"))
+                .execute()
+                .saveContent(file)
+        }
+
+        data = INPUT.gras()
+    }
 
     @Test
     fun part1() {
-        samplePart1();
+        samplePart1()
         println("Solution to part 1:  ${solvePart1(data)}")
     }
+
+    abstract fun day(): Int
 
     @Test
     fun part2() {
