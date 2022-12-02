@@ -16,26 +16,26 @@ class Day2Solution : TestBase() {
     override fun solvePart1(data: List<String>) = data
         .sumOf {
             val (oppMove, myMove) = it.split(" ")
-            Round(RPS.map(oppMove), RPS.map(myMove))
+            Round(Move.map(oppMove), Move.map(myMove))
                 .compete()
         }
 
     override fun solvePart2(data: List<String>) = data
         .sumOf {
             val (letter, hint) = it.split(" ")
-            val move = RPS.map(letter)
+            val move = Move.map(letter)
             Round(move, move.useHint(hint))
                 .compete()
         }
 }
 
-data class Round(val oppMove: RPS, val myMove: RPS) {
+data class Round(val oppMove: Move, val myMove: Move) {
     fun compete() = myMove.against(oppMove) + myMove.ordinal + 1
 }
 
-enum class RPS {
+enum class Move {
     ROCK {
-        override fun against(other: RPS): Int {
+        override fun against(other: Move): Int {
             return when (other) {
                 ROCK -> 3;
                 PAPER -> 0;
@@ -43,7 +43,7 @@ enum class RPS {
             }
         }
 
-        override fun useHint(hint: String): RPS {
+        override fun useHint(hint: String): Move {
             return when (hint) {
                 "X" -> SCISSORS
                 "Y" -> ROCK
@@ -53,7 +53,7 @@ enum class RPS {
         }
     },
     PAPER {
-        override fun against(other: RPS): Int {
+        override fun against(other: Move): Int {
             return when (other) {
                 ROCK -> 6;
                 PAPER -> 3;
@@ -61,7 +61,7 @@ enum class RPS {
             }
         }
 
-        override fun useHint(hint: String): RPS {
+        override fun useHint(hint: String): Move {
             return when (hint) {
                 "X" -> ROCK
                 "Y" -> PAPER
@@ -71,7 +71,7 @@ enum class RPS {
         }
     },
     SCISSORS {
-        override fun against(other: RPS): Int {
+        override fun against(other: Move): Int {
             return when (other) {
                 ROCK -> 0;
                 PAPER -> 6;
@@ -79,7 +79,7 @@ enum class RPS {
             }
         }
 
-        override fun useHint(hint: String): RPS {
+        override fun useHint(hint: String): Move {
             return when (hint) {
                 "X" -> PAPER
                 "Y" -> SCISSORS
@@ -89,12 +89,12 @@ enum class RPS {
         }
     };
 
-    abstract fun against(other: RPS): Int
+    abstract fun against(other: Move): Int
 
-    abstract fun useHint(hint: String): RPS
+    abstract fun useHint(hint: String): Move
 
     companion object {
-        fun map(letter: String): RPS {
+        fun map(letter: String): Move {
             return when (letter) {
                 "A", "X" -> ROCK;
                 "B", "Y" -> PAPER;
