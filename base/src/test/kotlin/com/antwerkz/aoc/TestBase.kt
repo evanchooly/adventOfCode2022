@@ -65,9 +65,9 @@ abstract class TestBase {
     abstract fun samplePart2()
     open fun samplePart3(): Unit = TODO()
 
-    abstract fun solvePart1(data: List<String>): Int
-    abstract fun solvePart2(data: List<String>): Int
-    open fun solvePart3(data: List<String>): Int = TODO()
+    abstract fun solvePart1(input: List<String>): Int
+    abstract fun solvePart2(input: List<String>): Int
+    open fun solvePart3(input: List<String>): Int = TODO()
 
     private fun String.read(): List<String> {
         return File(this).readLines()

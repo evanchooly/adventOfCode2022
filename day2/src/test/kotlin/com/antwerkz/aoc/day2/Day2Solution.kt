@@ -13,14 +13,14 @@ class Day2Solution : TestBase() {
         assertEquals(solvePart2(sample), 12)
     }
 
-    override fun solvePart1(data: List<String>) = data
+    override fun solvePart1(input: List<String>) = input
         .sumOf {
             val (oppMove, myMove) = it.split(" ")
             Round(Move.map(oppMove), Move.map(myMove))
                 .compete()
         }
 
-    override fun solvePart2(data: List<String>) = data
+    override fun solvePart2(input: List<String>) = input
         .sumOf {
             val (letter, hint) = it.split(" ")
             val move = Move.map(letter)
