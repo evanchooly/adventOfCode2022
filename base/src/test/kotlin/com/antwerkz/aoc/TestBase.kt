@@ -3,8 +3,8 @@ package com.antwerkz.aoc
 import java.io.File
 import java.net.URI
 import org.apache.hc.client5.http.fluent.Request
+import org.testng.SkipException
 import org.testng.annotations.BeforeClass
-import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 abstract class TestBase {
@@ -13,7 +13,7 @@ abstract class TestBase {
         val SAMPLE = "src/test/resources/sample.txt"
     }
 
-    val sample = SAMPLE.gras()
+    lateinit var sample: List<String>
     lateinit var data: List<String>
 
     @BeforeClass
@@ -24,12 +24,13 @@ abstract class TestBase {
 
             Request.get(url)
                 .userAgent("Mozilla/5.0 (compatible; aoc; +https://github.com/evanchooly/adventofcode2022)")
-                .addHeader("Cookie", "session="+System.getenv("SESSION_ID"))
+                .addHeader("Cookie", "session=" + System.getenv("SESSION_ID"))
                 .execute()
                 .saveContent(file)
         }
 
-        data = INPUT.gras()
+        data = INPUT.read()
+        sample = SAMPLE.read()
     }
 
     @Test
@@ -42,8 +43,12 @@ abstract class TestBase {
 
     @Test
     fun part2() {
-        samplePart2()
-        println("Solution to part 2:  ${solvePart2(data)}")
+        try {
+            samplePart2()
+            println("Solution to part 2:  ${solvePart2(data)}")
+        } catch (_: NotImplementedError) {
+            throw SkipException("part 2 not implemented")
+        }
     }
 
     @Test
@@ -52,31 +57,19 @@ abstract class TestBase {
             samplePart3()
             println("Solution to part 3:  ${solvePart3(data)}")
         } catch (_: NotImplementedError) {
+            throw SkipException("part 3 not implemented")
         }
     }
 
     abstract fun samplePart1()
     abstract fun samplePart2()
-    open fun samplePart3() {
-        TODO()
-    }
+    open fun samplePart3(): Unit = TODO()
 
     abstract fun solvePart1(data: List<String>): Int
     abstract fun solvePart2(data: List<String>): Int
-    open fun solvePart3(data: List<String>): Int {
-        TODO()
-    }
+    open fun solvePart3(data: List<String>): Int = TODO()
 
-    @DataProvider(name = "inputs")
-    fun readInputs(): Array<Array<List<String>>> {
-        return arrayOf(arrayOf())
-    }
-
-    private fun String.gras(): List<String> {
+    private fun String.read(): List<String> {
         return File(this).readLines()
-    }
-
-    @DataProvider(name = "dummy")
-    fun bob() {
     }
 }
