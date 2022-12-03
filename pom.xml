@@ -108,7 +108,7 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
                 <file>
-                    <exists>src/main/kotlin</exists>
+                    <exists>src/test/kotlin</exists>
                 </file>
             </activation>
             <build>

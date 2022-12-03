@@ -36,7 +36,7 @@ abstract class TestBase {
     @Test
     fun part1() {
         samplePart1()
-        println("Solution to part 1:  ${solvePart1(data)}")
+        println("Solution to day ${day()} part 1:  ${solvePart1(data)}")
     }
 
     abstract fun day(): Int
@@ -45,7 +45,7 @@ abstract class TestBase {
     fun part2() {
         try {
             samplePart2()
-            println("Solution to part 2:  ${solvePart2(data)}")
+            println("Solution to day ${day()} part 2:  ${solvePart2(data)}")
         } catch (_: NotImplementedError) {
             throw SkipException("part 2 not implemented")
         }
@@ -55,7 +55,7 @@ abstract class TestBase {
     fun part3() {
         try {
             samplePart3()
-            println("Solution to part 3:  ${solvePart3(data)}")
+            println("Solution to day ${day()} part 3:  ${solvePart3(data)}")
         } catch (_: NotImplementedError) {
             throw SkipException("part 3 not implemented")
         }
