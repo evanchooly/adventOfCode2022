@@ -1,13 +1,12 @@
 package com.antwerkz.aoc.day3
 
 import com.antwerkz.aoc.TestBase
-import org.testng.Assert.assertEquals
 
 class Day3Solution : TestBase() {
     override fun day(): Int = 3
-    override fun samplePart1() = assertEquals(solvePart1(sample), 157)
+    override fun sampleSolutionPart1() = 157
 
-    override fun samplePart2() = assertEquals(solvePart2(sample), 70)
+    override fun sampleSolutionPart2() = 70
 
     override fun solvePart1(input: List<String>) = input
         .flatMap { it.chunked(it.length / 2) }

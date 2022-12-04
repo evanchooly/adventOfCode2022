@@ -1,17 +1,12 @@
 package com.antwerkz.aoc.day2
 
 import com.antwerkz.aoc.TestBase
-import org.testng.Assert.assertEquals
 
 class Day2Solution : TestBase() {
     override fun day(): Int = 2
-    override fun samplePart1() {
-        assertEquals(solvePart1(sample), 15)
-    }
+    override fun sampleSolutionPart1() = 15
 
-    override fun samplePart2() {
-        assertEquals(solvePart2(sample), 12)
-    }
+    override fun sampleSolutionPart2() = 12
 
     override fun solvePart1(input: List<String>) = input
         .sumOf {

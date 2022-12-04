@@ -3,6 +3,7 @@ package com.antwerkz.aoc
 import java.io.File
 import java.net.URI
 import org.apache.hc.client5.http.fluent.Request
+import org.testng.Assert
 import org.testng.SkipException
 import org.testng.annotations.BeforeClass
 import org.testng.annotations.Test
@@ -61,8 +62,15 @@ abstract class TestBase {
         }
     }
 
-    abstract fun samplePart1()
-    abstract fun samplePart2()
+    fun samplePart1() {
+        Assert.assertEquals(solvePart1(sample), sampleSolutionPart1());
+    }
+
+    fun samplePart2() {
+        Assert.assertEquals(solvePart2(sample), sampleSolutionPart2());
+    }
+    abstract fun sampleSolutionPart1(): Int
+    abstract fun sampleSolutionPart2(): Int
     open fun samplePart3(): Unit = TODO()
 
     abstract fun solvePart1(input: List<String>): Int

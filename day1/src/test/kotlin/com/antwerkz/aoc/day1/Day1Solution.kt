@@ -6,13 +6,9 @@ import org.testng.Assert.assertEquals
 class Day1Solution : TestBase() {
     override fun day() = 1
 
-    override fun samplePart1() {
-        assertEquals(solvePart1(sample), 24000);
-    }
+    override fun sampleSolutionPart1()= 24000
 
-    override fun samplePart2() {
-        assertEquals(solvePart2(sample), 45000);
-    }
+    override fun sampleSolutionPart2() = 45000
 
     override fun solvePart1(input: List<String>) = load(input)
         .map { elf -> elf to elf.load.sum() }
