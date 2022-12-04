@@ -10,10 +10,10 @@ class Day3Solution : TestBase() {
     override fun samplePart2() = assertEquals(solvePart2(sample), 70)
 
     override fun solvePart1(input: List<String>) = input
-        .map {
-            Rucksack(it.chunked(it.length / 2)
-                .map { chunk -> chunk.toList() })
-        }.sumOf { it.priority() }
+        .flatMap { it.chunked(it.length / 2) }
+        .chunked(2)
+        .map { Rucksack(it.map { chunk -> chunk.toList() }) }
+        .sumOf { it.priority() }
 
     override fun solvePart2(input: List<String>) = input
         .chunked(3)
