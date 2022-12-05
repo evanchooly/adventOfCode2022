@@ -7,9 +7,12 @@ class Day5Solution : TestBase() {
     override fun day(): Int = 5
     override fun sampleSolutionPart1() = "CMZ"
 
-    override fun sampleSolutionPart2() = TODO()
+    override fun sampleSolutionPart2() = "MCD"
 
-    override fun solvePart1(input: List<String>): String {
+    override fun solvePart1(input: List<String>) = stackCrates(input, false)
+    override fun solvePart2(input: List<String>) = stackCrates(input, true)
+
+    private fun stackCrates(input: List<String>, multiMove: Boolean): String {
         val stacks = buildStacks(input)
 
         stacks.render()
@@ -17,13 +20,16 @@ class Day5Solution : TestBase() {
             .forEach {
                 if (visualize) println("it = ${it}")
                 var split = it.split(" ")
-                stacks.move(split[1].toInt(), split[3].toInt() - 1, split[5].toInt() - 1)
+                stacks.move(split[1].toInt(), split[3].toInt() - 1, split[5].toInt() - 1, multiMove)
             }
         return stacks.joinToString("") { it.last() }
     }
 
-    private fun MutableList<MutableList<String>>.move(take: Int, source: Int, target: Int) {
-        this[target] += this[source].takeLast(take).reversed()
+    private fun MutableList<MutableList<String>>.move(take: Int, source: Int, target: Int, multiMove: Boolean) {
+        var strings = this[source].takeLast(take)
+        if(!multiMove) strings = strings.reversed()
+        
+        this[target] += strings
         this[source] = this[source].dropLast(take).toMutableList()
         render()
     }
@@ -43,7 +49,6 @@ class Day5Solution : TestBase() {
         return stacks
     }
 
-    override fun solvePart2(input: List<String>) = TODO()
     private fun List<List<String>>.render() {
         if (!visualize) return 
         forEachIndexed { index, it ->
