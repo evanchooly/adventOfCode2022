@@ -19,9 +19,7 @@ class Day5Solution : TestBase() {
                 var split = it.split(" ")
                 stacks.move(split[1].toInt(), split[3].toInt() - 1, split[5].toInt() - 1)
             }
-        
-        val tops = stacks.joinToString("") { it.last() }
-        return tops
+        return stacks.joinToString("") { it.last() }
     }
 
     private fun MutableList<MutableList<String>>.move(take: Int, source: Int, target: Int) {
