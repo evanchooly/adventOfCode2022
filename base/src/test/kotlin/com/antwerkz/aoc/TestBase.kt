@@ -10,12 +10,12 @@ import org.testng.annotations.Test
 
 abstract class TestBase {
     companion object {
-        val INPUT = "src/test/resources/input.txt"
-        val SAMPLE = "src/test/resources/sample.txt"
+        const val INPUT = "src/test/resources/input.txt"
+        const val SAMPLE = "src/test/resources/sample.txt"
     }
 
-    lateinit var sample: List<String>
-    lateinit var data: List<String>
+    private lateinit var sample: List<String>
+    private lateinit var data: List<String>
 
     @BeforeClass
     fun downloadInput() {
@@ -52,30 +52,14 @@ abstract class TestBase {
         }
     }
 
-    @Test
-    fun part3() {
-        try {
-            samplePart3()
-            println("Solution to day ${day()} part 3:  ${solvePart3(data)}")
-        } catch (_: NotImplementedError) {
-            throw SkipException("part 3 not implemented")
-        }
-    }
+    private fun samplePart1() = Assert.assertEquals(solvePart1(sample), sampleSolutionPart1())
+    private fun samplePart2() = Assert.assertEquals(solvePart2(sample), sampleSolutionPart2())
 
-    fun samplePart1() {
-        Assert.assertEquals(solvePart1(sample), sampleSolutionPart1());
-    }
+    abstract fun sampleSolutionPart1(): Any
+    abstract fun sampleSolutionPart2(): Any
 
-    fun samplePart2() {
-        Assert.assertEquals(solvePart2(sample), sampleSolutionPart2());
-    }
-    abstract fun sampleSolutionPart1(): Int
-    abstract fun sampleSolutionPart2(): Int
-    open fun samplePart3(): Unit = TODO()
-
-    abstract fun solvePart1(input: List<String>): Int
-    abstract fun solvePart2(input: List<String>): Int
-    open fun solvePart3(input: List<String>): Int = TODO()
+    abstract fun solvePart1(input: List<String>): Any
+    abstract fun solvePart2(input: List<String>): Any
 
     private fun String.read(): List<String> {
         return File(this).readLines()

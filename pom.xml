@@ -28,10 +28,16 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <sourceDirectory>day1/src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>day1/src/test/kotlin</testSourceDirectory>
+    <modules>
+        <module>base</module>
+        <module>day1</module>
+        <module>day2</module>
+        <module>day3</module>
+        <module>day4</module>
+        <module>day5</module>
+    </modules>
 
+    <build>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -133,11 +139,4 @@
             </dependencies>
         </profile>
     </profiles>
-    <modules>
-        <module>base</module>
-        <module>day1</module>
-        <module>day2</module>
-        <module>day3</module>
-        <module>day4</module>
-    </modules>
 </project>
