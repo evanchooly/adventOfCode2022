@@ -1,6 +1,5 @@
-package com.antwerkz.aoc.day somevalue
+package com.antwerkz.aoc
 
-import com.antwerkz.aoc.TestBase
 import org.testng.Assert.assertEquals
 
 class Solution : TestBase() {
