@@ -61,7 +61,7 @@ abstract class TestBase {
     abstract fun solvePart1(input: List<String>): Any
     abstract fun solvePart2(input: List<String>): Any
 
-    private fun String.read(): List<String> {
+    fun String.read(): List<String> {
         return File(this).readLines()
     }
 }
