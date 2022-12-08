@@ -2,7 +2,7 @@ package com.antwerkz.aoc
 
 import org.testng.Assert.assertEquals
 
-class Solution : TestBase() {
+class Day Solution : TestBase() {
     override fun day(): Int = somevalue
     override fun sampleSolutionPart1() = TODO()
 
