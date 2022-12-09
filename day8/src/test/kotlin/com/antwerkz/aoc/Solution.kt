@@ -33,13 +33,12 @@ class Day8Solution : TestBase() {
     }
 
     private fun scenicScore(forest: List<String>, x: Int, y: Int): Int {
-        val up = visibleUp(forest, x, y)
-        val left = visibleToLeft(forest, x, y)
-        val right = visibleToRight(forest, x, y)
-        val down = visibleDown(forest, x, y)
-        var visible = right * left * up * down
+        val up = visible(forest, forest[x][y], Stepper(x, y, forest.size) { row-- })
+        val down = visible(forest, forest[x][y], Stepper(x, y, forest.size) { row++ })
+        val left = visible(forest, forest[x][y], Stepper(x, y, forest.size) { column-- })
+        val right = visible(forest, forest[x][y], Stepper(x, y, forest.size) { column++ })
 
-        return visible
+        return right * left * up * down
     }
 
     private fun isVisible(forest: List<String>, x: Int, y: Int): Boolean {
@@ -60,47 +59,23 @@ class Day8Solution : TestBase() {
     private fun visibleFromDown(forest: List<String>, x: Int, y: Int) =
         ((y+1) until forest.size).maxOf { forest[it][x] } < forest[y][x]
 
-    private fun visibleToLeft(forest: List<String>, x: Int, y: Int): Int {
-        var current = y
-        var visible = 0
-
-        while(--current >= 0) {
-            visible++
-            if (forest[x][current] >= forest[x][y]) return visible
+    private fun visible(forest: List<String>, target: Char, stepper: Stepper): Int {
+        while(stepper.next()) {
+            if(forest[stepper.row][stepper.column] >= target) return stepper.steps
         }
-        return visible
+        return stepper.steps
     }
+}
 
-    private fun visibleToRight(forest: List<String>, x: Int, y: Int): Int {
-        var current = y
-        var visible = 0
+class Stepper(var row: Int, var column: Int, var max: Int, val step: Stepper.() -> Unit) {
+    var steps = 0
 
-        while(++current < forest.size) {
-            visible++
-            if (forest[x][current] >= forest[x][y]) return visible
-        }
-        return visible
-    }
+    fun done() = row < 0 || row >= max
+        || column < 0 || column >= max
 
-    private fun visibleUp(forest: List<String>, x: Int, y: Int): Int {
-        var current = x
-        var visible = 0
-
-        while(--current >= 0) {
-            visible++
-            if(forest[current][y] >= forest[x][y]) return visible
-        }
-        return visible
-    }
-
-    private fun visibleDown(forest: List<String>, x: Int, y: Int): Int {
-        var current = x
-        var visible = 0
-
-        while(++current < forest.size) {
-            visible++
-            if(forest[current][y] >= forest[x][y]) return visible
-        }
-        return visible
+    fun next(): Boolean {
+        this.step()
+        if(!done()) steps++
+        return !done()
     }
 }
