@@ -11,9 +11,9 @@ class Day8Solution : TestBase() {
     override fun solvePart1(input: List<String>): Int {
         var visible = 0
 
-        input.forEachIndexed { x, row ->
-            row.forEachIndexed { y, cell ->
-                if (isVisible(input, x, y)) visible++
+        for( row in input.indices) {
+            for (column in input.indices) {
+                if (isVisible(input, row, column)) visible++
             }
         }
 
@@ -23,31 +23,56 @@ class Day8Solution : TestBase() {
     override fun solvePart2(input: List<String>): Int {
         var score = 0
 
-        for( x in input.indices) {
-            for (y in input.indices) {
-                score = max(score, scenicScore(input, x, y))
+        for( row in input.indices) {
+            for (column in input.indices) {
+                score = max(score, scenicScore(input, row, column))
             }
         }
 
         return score
     }
 
-    private fun scenicScore(forest: List<String>, x: Int, y: Int): Int {
-        val up = visible(forest, forest[x][y], Stepper(x, y, forest.size) { row-- })
-        val down = visible(forest, forest[x][y], Stepper(x, y, forest.size) { row++ })
-        val left = visible(forest, forest[x][y], Stepper(x, y, forest.size) { column-- })
-        val right = visible(forest, forest[x][y], Stepper(x, y, forest.size) { column++ })
+    private fun scenicScore(forest: List<String>, row: Int, column: Int): Int {
+        val up = Stepper(forest, row, column, forest.size) { this.row-- }.run()
+        val down  = Stepper(forest, row, column, forest.size) { this.row++ }.run()
+        val left  = Stepper(forest, row, column, forest.size) { this.column-- }.run()
+        val right = Stepper(forest, row, column, forest.size) { this.column++ }.run()
 
         return right * left * up * down
     }
 
-    private fun isVisible(forest: List<String>, x: Int, y: Int): Boolean {
-        return x == 0 || x == forest.size - 1
-            || y == 0 || y == forest.size - 1
-            || visibleFromRight(forest, x, y)
-            || visibleFromLeft(forest, x, y)
-            || visibleFromUp(forest, x, y)
-            || visibleFromDown(forest, x, y)
+    private fun isVisible(forest: List<String>, row: Int, column: Int): Boolean {
+        val largest = object {
+            var up: Int = 0
+            var down: Int = 0
+            var left: Int = 0
+            var right: Int = 0
+
+            override fun toString() = "up:$up down:$down left:$left right:$right"
+        }
+        val visible = object {
+            var up = false
+            var down = false
+            var left = false
+            var right = false
+
+            override fun toString() = "up:$up down:$down left:$left right:$right"
+        }
+        val target = forest[row][column].digitToInt()
+
+        largest.up = MaxStepper(forest, row, column, forest.size) { this.row-- }.run()
+        visible.up = largest.up < target
+
+        largest.down = MaxStepper(forest, row, column, forest.size) { this.row++ }.run()
+        visible.down  = largest.down < target
+
+        largest.left = MaxStepper(forest, row, column, forest.size) { this.column-- }.run()
+        visible.left = largest.left < target
+
+        largest.right = MaxStepper(forest, row, column, forest.size) { this.column++ }.run()
+        visible.right = largest.right < target
+
+        return visible.up || visible.down || visible.left || visible.right
     }
 
     private fun visibleFromLeft(forest: List<String>, x: Int, y: Int) =
@@ -58,24 +83,37 @@ class Day8Solution : TestBase() {
         (0 until y).maxOf { forest[it][x] } < forest[y][x]
     private fun visibleFromDown(forest: List<String>, x: Int, y: Int) =
         ((y+1) until forest.size).maxOf { forest[it][x] } < forest[y][x]
-
-    private fun visible(forest: List<String>, target: Char, stepper: Stepper): Int {
-        while(stepper.next()) {
-            if(forest[stepper.row][stepper.column] >= target) return stepper.steps
-        }
-        return stepper.steps
-    }
 }
 
-class Stepper(var row: Int, var column: Int, var max: Int, val step: Stepper.() -> Unit) {
+open class Stepper(val forest: List<String>, var row: Int, var column: Int, var max: Int, val nextStep: Stepper.() -> Unit) {
     var steps = 0
+    val target = forest[row][column]
+
+    open fun run(): Int {
+        while(next()) {
+            if(forest[row][column] >= target) return steps
+        }
+        return steps
+    }
 
     fun done() = row < 0 || row >= max
         || column < 0 || column >= max
 
-    fun next(): Boolean {
-        this.step()
+    open fun next(): Boolean {
+        nextStep()
         if(!done()) steps++
         return !done()
+    }
+}
+
+class MaxStepper(forest: List<String>, row: Int, column: Int, max: Int, step: Stepper.() -> Unit):
+    Stepper(forest, row, column, max, step) {
+
+    var largest = -1
+    override fun run(): Int {
+        while(next()) {
+            largest = max(forest[row][column].digitToInt(), largest)
+        }
+        return largest
     }
 }
