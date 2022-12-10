@@ -14,8 +14,8 @@ abstract class TestBase {
         const val SAMPLE = "src/test/resources/sample.txt"
     }
 
-    private lateinit var sample: List<String>
-    private lateinit var data: List<String>
+    lateinit var sample: List<String>
+    lateinit var data: List<String>
 
     @BeforeClass
     fun downloadInput() {
@@ -34,16 +34,16 @@ abstract class TestBase {
         sample = SAMPLE.read()
     }
 
+    abstract fun day(): Int
+
     @Test
-    fun part1() {
+    open fun part1() {
         samplePart1()
         println("Solution to day ${day()} part 1:  ${solvePart1(data)}")
     }
 
-    abstract fun day(): Int
-
     @Test
-    fun part2() {
+    open fun part2() {
         try {
             samplePart2()
             println("Solution to day ${day()} part 2:  ${solvePart2(data)}")
@@ -52,8 +52,8 @@ abstract class TestBase {
         }
     }
 
-    private fun samplePart1() = Assert.assertEquals(solvePart1(sample), sampleSolutionPart1())
-    private fun samplePart2() = Assert.assertEquals(solvePart2(sample), sampleSolutionPart2())
+    open fun samplePart1() = Assert.assertEquals(solvePart1(sample), sampleSolutionPart1())
+    open fun samplePart2() = Assert.assertEquals(solvePart2(sample), sampleSolutionPart2())
 
     abstract fun sampleSolutionPart1(): Any
     abstract fun sampleSolutionPart2(): Any

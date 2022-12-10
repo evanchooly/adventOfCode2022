@@ -1,68 +1,72 @@
 package com.antwerkz.aoc
 
-import kotlin.math.abs
+import java.io.File
+import org.testng.Assert
+import org.testng.annotations.BeforeTest
 
 typealias Location = Pair<Int, Int>
 
 class Day9Solution : TestBase() {
     override fun day(): Int = 9
+
+    @BeforeTest
+    fun delete() {
+        File("target/steps").deleteRecursively()
+    }
+    override fun samplePart2() {
+        val sample2 = "src/test/resources/sample2.txt".read()
+
+        Grid.set(5, 6)
+        Assert.assertEquals(solvePart2(sample), sampleSolutionPart2())
+        Grid.set(21, 26)
+        Assert.assertEquals(solvePart2(sample2, 15 to 11), 36)
+    }
+
     override fun sampleSolutionPart1() = 13
 
-    override fun sampleSolutionPart2() = TODO()
+    override fun sampleSolutionPart2() = 1
 
     override fun solvePart1(input: List<String>): Int {
-        val head = Position("head")
-        val tail = Position("tail")
+        Grid.set(100, 100)
+        val rows = Grid.get().rows
+        val head = Position('H', rows / 2 to rows / 2 )
+        val tail = head.follower('T')
+        head.render("initial")
         input.map { val split = it.split(" ")
             split[0].toMove(split[1].toInt())
         }.forEach {
-            it.process(head, tail)
+            it.process(head)
         }
 
+        Grid.get().plotHistory(tail, "part1")
         return tail.history.size
     }
 
-    override fun solvePart2(input: List<String>) = TODO()
-}
-
-class Position(val name: String) {
-    var location: Location = 0 to 0
-    val history = mutableSetOf(location)
-
-    fun moveTo(location: Location) {
-        this.location = location
-        history.add(location)
+    override fun solvePart2(input: List<String>): Int {
+        return solvePart2(input, 0 to 0)
     }
 
-    fun react(other: Position) {
-        val rowOffset = offset(other.location.first, location.first)
-        val colOffset = offset(other.location.second, location.second)
-        if(abs(colOffset) > 1) {
-            if(rowOffset == 0) {
-                moveTo(location.first to location.second + abs(colOffset)/colOffset)
-            } else {
-                moveTo(other.location.first to location.second + abs(colOffset)/colOffset)
-            }
-        } else if(abs(rowOffset) > 1) {
-            if(colOffset == 0) {
-                moveTo(location.first + abs(rowOffset)/rowOffset to location.second)
-            } else {
-                moveTo(location.first + abs(rowOffset)/rowOffset to other.location.second)
-            }
+    fun solvePart2(input: List<String>, location: Location): Int {
+        val head = Position('H', location)
+        var tail = head
+        repeat(9) { i -> tail = tail.follower('1' + i) }
+
+        head.render("initial")
+        input.map { val split = it.split(" ")
+            split[0].toMove(split[1].toInt())
+        }.forEach {
+            it.process(head)
         }
-    }
 
+        Grid.get().plotHistory(tail)
+        return tail.history.size
+    } }
 
-    private fun offset(other: Int, mine: Int) = other - mine
-    override fun toString(): String {
-        return "Position($name [$location])"
-    }
-}
 class Move(val name: String, val count: Int, val update: Location.() -> Location) {
-    fun process(head: Position, tail: Position) {
-        (0 until count).forEach {
-            head.moveTo(head.location.update())
-            tail.react(head)
+    fun process(position: Position) {
+        (0 until count).forEach { _ ->
+            position.moveTo(position.location.update())
+            position.render("${name}${count}")
         }
     }
 
