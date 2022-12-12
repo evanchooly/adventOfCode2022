@@ -15,20 +15,17 @@ class Day10Solution : TestBase() {
     override fun sampleSolutionPart2() = TODO()
 
     override fun solvePart1(input: List<String>): List<Int> {
-        val strengths = mutableListOf<Int>()
         val results = input.flatMap {
             processInstruction(it)
         }
         val targetCycles = intArrayOf(20, 60, 100, 140, 180, 220)
         val regValues = mutableListOf<Int>()
         regValues += 1
-        for ((cycle, result) in results.withIndex()) {
+        for ( cycle in results.indices) {
             regValues += regValues.last() + results[cycle]
         }
-        targetCycles
-            .map {
-            strengths += regValues[it-1] * it
-        }
+        val strengths = targetCycles
+            .map { regValues[it-1] * it }
 
         return strengths + strengths.sum()
     }
