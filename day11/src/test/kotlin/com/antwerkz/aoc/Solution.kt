@@ -1,6 +1,9 @@
 package com.antwerkz.aoc
 
 class Day11Solution : TestBase() {
+    private var divisors = mutableListOf<Long>()
+    var modulo = 1L
+    
     override fun day() = 11
     override fun sampleSolutionPart1() = 10605L
 
@@ -13,16 +16,14 @@ class Day11Solution : TestBase() {
 
     override fun solvePart2(input: List<String>): Long {
         val monkeys = parse(input.iterator(), 1)
+        modulo = lcm(divisors)
         return watch(monkeys, 10000)
     }
 
     private fun watch(monkeys: List<Monkey>, rounds: Int): Long {
-        (1..rounds).forEach {
+        repeat((1..rounds).count()) {
             monkeys.forEach { monkey ->
                 monkey.inspect(monkeys)
-            }
-            if(it == 1 || it == 20 || it % 1000 == 0) {
-                println(monkeys.map { monkey -> monkey.inspected })
             }
         }
         return monkeys.sortedBy { it.inspected }
@@ -57,8 +58,25 @@ class Day11Solution : TestBase() {
         return monkeys
     }
 
+    fun gcd(a: Long, b: Long): Long {
+        if (b == 0L) return a
+        return gcd(b, a % b)
+    }
+
+    fun lcm(a: Long, b: Long): Long {
+        return a  * b / gcd(a, b)
+    }
+    
+    fun lcm(values: List<Long>): Long {
+        var result = lcm(values[0], values[1])
+        for(value in values.drop(2)) {
+            result = lcm(result, value)
+        }
+        return result
+    }
     private fun buildReaction(input: Iterator<String>, worryAdjustment: Long): Monkey.(List<Monkey>) -> Unit {
         val divisor = input.next().substringAfterLast(" ").toLong()
+        divisors += divisor
         val trueMonkey = input.next().substringAfterLast(" ").toInt()
         val falseMonkey = input.next().substringAfterLast(" ").toInt()
 
@@ -76,26 +94,25 @@ class Day11Solution : TestBase() {
     }
 
     private fun buildOperation(equation: List<String>, truncate: Boolean = false): (Long) -> Long {
-        val MODULO = 23*19*13*17
         return when (equation[1]) {
             "*" -> {
                 if (equation[2] != "old") { old -> var new = old * equation[2].toLong()
-                    if(truncate) new %= MODULO
+                    if(truncate) new %= modulo
                     new
                 }
                 else { old -> var new = old * old
-                    if(truncate) new %= MODULO
+                    if(truncate) new %= modulo
                     new
                 }
             }
 
             "+" -> {
                 if (equation[2] != "old") { old -> var new = old + equation[2].toLong()
-                    if(truncate) new %= MODULO
+                    if(truncate) new %= modulo
                     new
                 }
                 else { old -> var new = old + old
-                    if(truncate) new %= MODULO
+                    if(truncate) new %= modulo
                     new
                 }
             }
